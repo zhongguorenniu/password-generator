@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>密码生成器</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            background-color: #f4f4f4;
+            margin: 0;
+        }
+        .container {
+            text-align: center;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+    </style>
+
+<link rel="manifest" href="manifest.json">
+<meta name="theme-color" content="#4a90e2">
+<script>
+if('serviceWorker' in navigator){
+window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));
+}
+</script>
+
+</head>
+<body>
+    <div class="container">
+        <h1>密码生成器</h1>
+        <button onclick="generatePassword()">生成密码</button>
+        <input type="text" id="password" readonly style="width: 300px; margin-top: 20px;">
+    </div>
+
+    <script>
+        function generatePassword() {
+            const length = 16; // 密码长度
+            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+            let password = "";
+            
+            for (let i = 0; i < length; i++) {
+                password += charset.charAt(Math.floor(Math.random() * charset.length));
+            }
+            
+            document.getElementById('password').value = password;
+        }
+    </script>
+</body>
+</html>

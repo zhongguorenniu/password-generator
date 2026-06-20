@@ -1,67 +1,115 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="zh">
+
 <head>
     <meta charset="UTF-8">
+
+    <!-- 🔒 防缩放核心 -->
     <meta name="viewport"
-      content="width=device-width,
-               initial-scale=1,
-               maximum-scale=1,
-               minimum-scale=1,
-               user-scalable=no">
-<style>
-html, body {
-    touch-action: manipulation;
-}
-</style>
-    
+        content="width=device-width, initial-scale=1, maximum-scale=1, minimum-scale=1, user-scalable=no">
+
+    <meta name="theme-color" content="#4a90e2">
+
     <title>密码生成器</title>
+
+    <!-- PWA -->
+    <link rel="manifest" href="manifest.json">
+
+    <script>
+        if ('serviceWorker' in navigator) {
+            window.addEventListener('load', () =>
+                navigator.serviceWorker.register('service-worker.js')
+            );
+        }
+    </script>
+
+    <!-- 🔥 App级防缩放 + 防误触 -->
     <style>
-        body {
+        html, body {
+            margin: 0;
+            padding: 0;
+            height: 100%;
+            overflow: hidden;
+
             font-family: Arial, sans-serif;
+
+            /* 核心防缩放 */
+            touch-action: manipulation;
+            -webkit-text-size-adjust: 100%;
+            -webkit-user-select: none;
+            user-select: none;
+        }
+
+        /* 防 iOS 手势缩放 */
+        * {
+            -webkit-touch-callout: none;
+        }
+
+        body {
             display: flex;
             justify-content: center;
             align-items: center;
-            height: 100vh;
             background-color: #f4f4f4;
-            margin: 0;
         }
+
         .container {
             text-align: center;
             background-color: #fff;
             padding: 20px;
-            border-radius: 8px;
+            border-radius: 10px;
             box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
         }
+
+        button {
+            font-size: 16px;
+            padding: 10px 15px;
+            touch-action: manipulation;
+        }
+
+        input {
+            width: 300px;
+            margin-top: 20px;
+            font-size: 16px; /* 🔥 关键：防 iPhone 自动放大 */
+            text-align: center;
+        }
     </style>
-
-<link rel="manifest" href="manifest.json">
-<meta name="theme-color" content="#4a90e2">
-<script>
-if('serviceWorker' in navigator){
-window.addEventListener('load',()=>navigator.serviceWorker.register('service-worker.js'));
-}
-</script>
-
 </head>
+
 <body>
+
     <div class="container">
         <h1>密码生成器</h1>
+
         <button onclick="generatePassword()">生成密码</button>
-        <input type="text" id="password" readonly style="width: 300px; margin-top: 20px;font-size:16px;">
+
+        <br>
+
+        <input type="text" id="password" readonly>
     </div>
 
     <script>
         function generatePassword() {
-            const length = 16; // 密码长度
-            const charset = "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+            const length = 16;
+            const charset =
+                "ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789!@#$%^&*()_+";
+
             let password = "";
-            
+
             for (let i = 0; i < length; i++) {
-                password += charset.charAt(Math.floor(Math.random() * charset.length));
+                password += charset.charAt(
+                    Math.floor(Math.random() * charset.length)
+                );
             }
-            
+
             document.getElementById('password').value = password;
         }
+
+        // 🔒 彻底禁止 iOS 手势缩放（加强版）
+        document.addEventListener('gesturestart', function (e) {
+            e.preventDefault();
+        });
     </script>
+
 </body>
+
 </html>
